@@ -1,0 +1,140 @@
+##################################### Cote DataBaseRelationel Cas de L héritage #########################################################
+
+
+                                               Bankkonto
+                                            ↗              ↖
+                                       GiroKonten       SparKonten
+
+
+---> Mapping de L héritage ->Il existe trois stratégies : Single Table, Joined Table et Table per Class
+
+
+
+
+A)-> Single Table avec deux exemples:
+
+  - Tableau pour toute la hiérarchie Fih ga3 les Attributs dyal Bankkonto / GiroKonto et Sparkonto vererbt von Bankkonto
+    + Fremd Schlüssel [KundeID]
+    + Discriminator Spalte Type [hanzido wahd spalte nsmiwha Type li hanhto fiha wach GiroKonto (Gk) ola SparKonto (Sk) ]
+
+    Id / Type / erstellungsdatum / balance / status  / währung / ueberziehung / zinsen / KundeID
+    1    Gk      12-02-2000         800      Active     Euro      800            Null     12
+    2    Sk      25-11-2008        1200      Active     USD       Null           4.5      250
+
+
+
+
+
+B)-> Table Per Class :
+
+  - Dans ce cas, on sépare complètement les tableaux: [ 1) GiroKonto / 2) SparKonto ]
+
+     1) GiroKonto:
+      Id / erstellungsdatum / balance / status  / währung / ueberziehung / KundeID
+      1     12-02-2004         6000      Active     Euro      6000           150
+
+     2) SparKonto:
+     Id / erstellungsdatum / balance / status  / währung / zinsen / KundeID
+     2     12-02-2007         5600     Active     Euro      3.7       18
+
+
+
+C)-> Joined Table :
+
+  - Dans ce cas, on a trois tableaux:
+
+  1) Bankkonto:
+    Id / erstellungsdatum / balance / status  / währung / KundeID
+    1      12-02-2000         800     Active     Euro       36
+    2      12-02-2008        1800     Active     USD        95
+
+
+  2) GiroKonten:
+   ueberziehung / BankkontoID
+      800             1
+
+
+  3) SparKonten:
+   zinsen / BankkontoID
+     1.8        2
+
+
+
+
+
+
+##################################### Cote (codes) ###########################################################################
+
+A) Single Table Les etapes :
+
+   ---> A-A) Dans SuperClass [ici c est Bankkonto]
+
+   1) Specifier La strategie
+   @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
+   2) DiscriminatorSpalte
+   @DiscriminatorColumn(name="TYPE" , length = 4 , discriminatorType = DiscriminatorType.STRING)
+
+
+  ---> A-B) Dans SubClasses [GiroKonten / SparKonten]
+
+    1) Ajouter DiscriminatorValue Li kaythto f Spalte TYPE :
+
+    @DiscriminatorValue("Gk") Dans Class GiroKonten
+    @DiscriminatorValue("Sk") Dans Class Sparkonten
+
+
+
+B) Table per Class :
+   - C'est la même chose, il ne faut pas utiliser @Discriminator, on n'en a pas besoin
+   - La classe mère SuperClass Bankkonto doit être abstraite pour qu'elle ne soit pas affichée dans la base de données,
+     car en réalité, on crée un GiroKonto ou un Sparkonto
+
+
+C)
+
+
+
+
+ ---> Le reste de code dans Le Main pour Tester
+
+
+
+
+B)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
